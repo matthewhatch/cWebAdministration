@@ -18,6 +18,7 @@ AppPoolStateFailureError=Failure to successfully set the state of the AppPool {0
 # It gives the AppPool info of the requested role/feature on the target machine.  
 function Get-TargetResource 
 {
+    [OutputType([Systems.Collections.HashTable])]
     param 
     (   
         [Parameter(Mandatory)]
@@ -318,6 +319,7 @@ function Set-TargetResource
 # The Test-TargetResource cmdlet is used to validate if the role or feature is in a state as expected in the instance document.
 function Test-TargetResource
 {
+    [OutputType([System.Boolean])]
     param 
     (       
         [ValidateSet("Present", "Absent")]

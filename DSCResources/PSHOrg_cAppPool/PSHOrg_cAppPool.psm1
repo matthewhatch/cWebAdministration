@@ -80,7 +80,7 @@ function Get-TargetResource
                                         userName = $PoolConfig.add.processModel.userName;
                                         password = $AppPoolCred
                                         loadUserProfile = $PoolConfig.add.processModel.loadUserProfile;
-					Enabled32Bit = $PoolConfig.Add.Enable32BitAppOnWin64;
+					                    Enabled32Bit = $PoolConfig.Add.Enable32BitAppOnWin64;
                                     }
         
         Write-Output $getTargetResourceResult;

@@ -1,9 +1,10 @@
 ﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path).Replace(".Tests.", ".")
 $sut = $sut.Replace(".ps1",".psm1")
+Import-Module "$here\$sut" -Prefix "AppPool" -Force
 $poolParams = Get-AppPoolTargetResource -Name "Powershell"
 
-Import-Module "$here\$sut" -Prefix "AppPool" -Force
+
 
 Describe "Test-TargetResource"{
     $Cred = New-Object -TypeName System.Management.Automation.PSCredential("Somefakeuser",((ConvertTo-SecureString "somefakepassword" -AsPlainText -Force)))

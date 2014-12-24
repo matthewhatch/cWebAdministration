@@ -27,7 +27,6 @@ AppPoolStateFailureError=Failure to successfully set the state of the AppPool {0
 }
 function Get-TargetResource
 {
-<<<<<<< HEAD
 	[CmdletBinding()]
 	[OutputType([System.Collections.Hashtable])]
 	param
@@ -89,74 +88,6 @@ function Get-TargetResource
                                     }
         
         return $getTargetResourceResult;
-=======
-    [OutputType([Systems.Collections.HashTable])]
-    param 
-    (   
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Name
-    )
-
-        $getTargetResourceResult = $null;
-
-        # Check if WebAdministration module is present for IIS cmdlets
-        if(!(Get-Module -ListAvailable -Name WebAdministration))
-        {
-            Throw "Please ensure that WebAdministration module is installed."
-        }
-
-        Write-Verbose "Getting AppPool $Name details"
-        $AppPools = & $env:SystemRoot\system32\inetsrv\appcmd.exe list apppool $Name
-
-        if ($AppPools.count -eq 0) # No AppPool exists with this name.
-        {
-            Write-Verbose "App Pool is Absent"
-            $ensureResult = "Absent";
-        }
-        elseif ($AppPools.count -eq 1) # A single AppPool exists with this name.
-        {
-            Write-Verbose "App Pool is Present"
-            $ensureResult = "Present"
-
-            [xml]$PoolConfig = & $env:SystemRoot\system32\inetsrv\appcmd.exe list apppool $Name /config:*
-            if(!([string]::IsNullOrEmpty($PoolConfig.add.processModel.userName))){
-                $AppPoolPassword = $PoolConfig.add.processModel.password | ConvertTo-SecureString -AsPlainText -Force
-                $AppPoolCred = new-object -typename System.Management.Automation.PSCredential -argumentlist $PoolConfig.add.processModel.userName,$AppPoolPassword
-            }
-            else{
-                $AppPoolCred =$null
-            }
-
-        }
-        else # Multiple AppPools with the same name exist. This is not supported and is an error
-        {
-            $errorId = "AppPoolDiscoveryFailure"; 
-            $errorCategory = [System.Management.Automation.ErrorCategory]::InvalidResult
-            $errorMessage = $($LocalizedData.AppPoolUpdateFailureError) -f ${Name} 
-            $exception = New-Object System.InvalidOperationException $errorMessage 
-            $errorRecord = New-Object System.Management.Automation.ErrorRecord $exception, $errorId, $errorCategory, $null
-
-            $PSCmdlet.ThrowTerminatingError($errorRecord);
-        }
-
-        # Add all Website properties to the hash table
-        $getTargetResourceResult = @{
-    	                                Name = $PoolConfig.add.name; 
-                                        Ensure = $ensureResult;
-                                        autoStart = $PoolConfig.add.autoStart;
-                                        managedRuntimeVersion = $PoolConfig.add.managedRuntimeVersion;
-                                        managedPipelineMode = $PoolConfig.add.managedPipelineMode;
-                                        startMode = $PoolConfig.add.startMode;
-                                        identityType = $PoolConfig.add.processModel.identityType;
-                                        userName = $PoolConfig.add.processModel.userName;
-                                        password = $AppPoolCred
-                                        loadUserProfile = $PoolConfig.add.processModel.loadUserProfile;
-					                    Enabled32Bit = $PoolConfig.Add.Enable32BitAppOnWin64;
-                                    }
-        
-        Write-Output $getTargetResourceResult;
->>>>>>> origin/master
 }
 
 
